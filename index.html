@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Weather</title>
+<!-- Don't forget to link to jQuery -->
+<style>
+	input{
+		margin: 10px 0px;
+		padding: 5px;
+	}
+	#forecast{
+		/*This div should not appear until the weather is returned.*/
+		display: none;
+	}
+	#forecast div{
+		width: 25vw;
+		border: 8px solid blue;
+		margin: 0 auto;
+		background: black;
+	}
+	img{
+		width:100%;
+	}
+	p{
+		text-align: center;
+		font-size: 22px;
+	}
+	span{
+		font-weight: 700;
+	}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    function gettingJSON(){
+    	console.log("Hi")
+
+    	let loc=$("#location").val()?$("#location").val():"Ann Arbor";
+    	let units=$("input:checked").length?$("input:checked").val():"imperial";
+    	let unit=(units=="imperial"?" F":" C");
+    	let YourWeatherAppID="4eb097c7d5ee15b961c06072b6adc772";
+		let query = "https://api.openweathermap.org/data/2.5/weather?q="+ loc +"&APPID=" + YourWeatherAppID +"&units="+ units;
+
+		let iconURL="https://openweathermap.org/img/wn/"
+        console.log("Query is :" + query);
+
+        $.getJSON(query,function(json){
+            console.log(JSON.stringify(json));
+
+            $("#tempImg").attr("src",iconURL+json.weather[0].icon+"@2x.png");
+            $("#loc").html(json.name);
+            $("#temp").html(json.main.temp+unit);
+            $("#high").html(json.main.temp_max+unit);
+            $("#low").html(json.main.temp_min+unit);
+        })
+        $("#forecast").css("display","block");
+    }
+    </script>
+</head>
+<body>
+	<!-- DO NOT CHANGE ANY CODE IN THE BODY OF THIS FILE. -->
+	<label for ="location">City:</label><input type = "text" id = "location"><br>
+	<input type = "radio" name = "temp" value = "imperial" id = "fahrenheit"> <label for = "fahrenheit">Fahrenheit</label><br>
+	<input type = "radio" name = "temp" value = "metric" id = "celcius"> <label for = "celcius">Celcius</label><br>
+
+	<button id = "getIt" onclick = " gettingJSON()">Get Weather</button>
+
+
+	<div id = "forecast">
+		<div>
+		<img id = "tempImg" src="" alt = "" title = "">
+		</div>
+		<p>The temperature in <span id = "loc"></span> is currently <span id = "temp"></span>.</p>
+		<p>The high today will be <span id = "high"></span> and the low will be <span id = "low"></span>.</p>
+		
+	</div>
+</body>
+</html>
